@@ -1,8 +1,6 @@
 from scholarly import scholarly
 import csv
 
-#search_query = scholarly.search_author('Lori Taylor')
-#scholarly.pprint(next(search_query))
 ###############################################################################################################################################################################
 ###############################################################################################################################################################################
 ##############  Opening CSV File called test_Names
@@ -24,6 +22,7 @@ fieldnames = myvar[0]
 myRequest.pop(0)
 myOutput = [None]*4
 myvar.pop(0)
+k = 0
 for item in myRequest:
     print("Working on: ",item)
     searchQuery = scholarly.search_author(item)
@@ -33,19 +32,20 @@ for item in myRequest:
         #print(publication['bib']['title'])
         if i < 149:
             myResult[i] = publication['bib']['title'].encode('utf-8').decode('ascii','ignore')
-    for i in range(3):
-        myOutput[i] = myvar[i]+myResult
-        print(myOutput[i])
+    
+    myOutput[k] = myvar[k]+myResult
+    print(myOutput[k])
+    k = k + 1
 #print(myResult)
 
-try:
-    with open('newNames.csv','w',newline='') as csv_file:
-        csv_writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-        csv_writer.writerow(fieldnames)
-        for i in range(3):
-            csv_writer.writerow(myOutput[i])
-except:
-    print("An error has occured within the print to csv function")
+#try:
+with open('newNames.csv','w',newline='') as csv_file:
+    csv_writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
+    csv_writer.writerow(fieldnames)
+    #for row in myOutput:
+    csv_writer.writerow(myOutput)
+# except:
+#     print("An error has occured within the print to csv function")
 
 # for i, line in enumerate(csv_reader): 
 #         if(i > 0):
