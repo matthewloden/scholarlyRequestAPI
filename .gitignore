@@ -1,3 +1,7 @@
-*.txt
-*.xlsx
-*.csv
+PythonProject/*.txt
+PythonProject/*.xlsx
+PythonProject/*.csv
+Mk2SerpAPI/*.csv
+Mk2SerpAPI/*.txt
+Mk2SerpAPI/*.xlsx
+.vscode
