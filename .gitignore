@@ -5,3 +5,4 @@ Mk2SerpAPI/*.csv
 Mk2SerpAPI/*.txt
 Mk2SerpAPI/*.xlsx
 .vscode
+Mk2SerpAPI/*.json

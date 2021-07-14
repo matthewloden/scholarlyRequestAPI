@@ -1,23 +1,36 @@
 import requests
-# from serpapi import GoogleSearch
+from serpapi import GoogleSearch
 import json
 import csv
 
-with open('test_Names.csv',mode = 'r') as testNames:
-  csvreader = csv.reader(testNames)
+fieldnames = ['first_Name','last_Name','University','Blank','Citations']
+authorNames = []
+with open('Mk2SerpAPI/test_Names.csv' , mode = 'r') as testNames:
+  csvreader = csv.DictReader(testNames,fieldnames=fieldnames)
+  next(csvreader) #skips header
   for line in csvreader:
-    myVar = line
+    authorNames.append(line['first_Name'] + ' ' + line['last_Name'] + ', ' + line['University'])
 
-print(myVar)
+#have aquired author names and placed them in an array called authorNames
 
-params = {
-  "engine": "google_scholar_profiles",
-  "mauthors": "Lori Taylor",
-  #"api_key": "secret_api_key"
-}
+#time to send the api request
+# for names in authorNames:
+#   params = {
+#     "engine": "google_scholar_profiles",
+#     "mauthors": names,
+#     #"api_key": "secret_api_key"    #need to store this in a secret way
+#   }
+#   print("Working On: ",params)
+#   search = GoogleSearch(params)
+#   results = search.get_dict()     #returns data in json format which will be of dictionary type
+#   author = results['author']
 
-# search = GoogleSearch(params)
-# results = search.get_dict()
-# author = results['author']
+with open('Mk2SerpAPI/authorID.json','r') as jsonFile:
+  jsonObject = json.load(jsonFile)
+  jsonFile.close()
 
-print(params)
+author_id = jsonObject['profiles'][0]['author_id']
+affiliations = jsonObject['profiles'][0]['affiliations']
+
+print(author_id,' , ',affiliations)
+
