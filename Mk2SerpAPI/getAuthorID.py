@@ -1,35 +1,31 @@
 import requests
 from serpapi import GoogleSearch
 import json
-import csv
+import pandas as pd
 
-fieldnames = ['first_Name','last_Name','University','Blank','Citations']
-authorNames = []
-outputLine = []
-with open('Mk2SerpAPI/test_Names.csv' , mode = 'r') as testNames:
-  csvreader = csv.DictReader(testNames,fieldnames=fieldnames)
-  next(csvreader) #skips header
-  for line in csvreader:
-    authorNames.append(line['first_Name'] + ' ' + line['last_Name'] + ', ' + line['University'])
-    inputFirstName = line['first_Name']
-    inputLastName = line['last_Name']
-    inputUniversity = line['University']
-    outputLine.append("{},{},{},{},{}".format(inputFirstName,inputLastName,inputUniversity,"authorid","affiliation")) 
+df = pd.read_csv('Mk2SerpAPI/test_Names.csv')
 
-print(outputLine)
-#have aquired author names and placed them in an array called authorNames
+# print(df)
+searchInput = []
+for index, row in df.iterrows():
+  searchInput.append(row['first_Name']+' '+row['last_Name']+', '+row['University'])
+print(searchInput)
+#have aquired author names and placed them in an array called searchInput
 
 #time to send the api request
-# for names in authorNames:
-#   params = {
-#     "engine": "google_scholar_profiles",
-#     "mauthors": names,
-#     #"api_key": "secret_api_key"    #need to store this in a secret way
-#   }
-#   print("Working On: ",names)
+for names in searchInput:
+  params = {
+    "engine": "google_scholar_profiles",
+    "mauthors": names,
+    #"api_key": "secret_api_key"    #need to store this in a secret way
+  }
+  print("Working On: ",names)
 
-# search = GoogleSearch.new(params)
-# profiles = search.get_hash[:profiles]
+  # search = GoogleSearch.new(params) 
+  # data = search.get_json()
+
+
+##implementation with json object not found recursivly
 
 with open('Mk2SerpAPI/authorID.json','r') as jsonFile:
   jsonObject = json.load(jsonFile)
@@ -43,9 +39,8 @@ kalenaAffiliation = "Texas A&M Univ, National Bureau of Economic Research (NBER)
 robertID = "YQJOP48AAAAJ"
 robertAffilliation = "Texas A&M University"
 
-with open('Mk2SerpAPI/authorIdFile.csv','w') as outputFile:
-  csvwriter = csv.writer(outputFile,delimiter = ',')
-  csvwriter.writerow(['first_Name','last_Name','University','AuthorID','Affiliation'])
-  for line in outputLine:
-    csvwriter.writerow([line])
-  
+df['authorID'] = author_id,kalenaID,robertID
+df['affiliation'] = affiliations,kalenaAffiliation,robertAffilliation
+
+
+df.to_csv('Mk2SerpAPI/authorIDFile.csv')
