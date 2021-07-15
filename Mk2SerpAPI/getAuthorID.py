@@ -14,7 +14,7 @@ with open('Mk2SerpAPI/test_Names.csv' , mode = 'r') as testNames:
     inputFirstName = line['first_Name']
     inputLastName = line['last_Name']
     inputUniversity = line['University']
-    outputLine.append("{},{},{},{},{}\n".format(inputFirstName,inputLastName,inputUniversity,"authorid","affiliation")) 
+    outputLine.append("{},{},{},{},{}".format(inputFirstName,inputLastName,inputUniversity,"authorid","affiliation")) 
 
 print(outputLine)
 #have aquired author names and placed them in an array called authorNames
@@ -43,12 +43,9 @@ kalenaAffiliation = "Texas A&M Univ, National Bureau of Economic Research (NBER)
 robertID = "YQJOP48AAAAJ"
 robertAffilliation = "Texas A&M University"
 
-# outputLine.append("{},{}\n".format(author_id,affiliations))
-# # # outputLine[1] += '\n'
-# # # outputLine[2] += '\n'
-# print(outputLine)
-
-# with open('Mk2SerpAPI/authorIdFile.csv','w') as outputFile:
-#   csvwriter = csv.writer(outputFile,delimiter = ',')
-#   csvwriter.writerow(['first_Name','last_Name','University','AuthorID','Affiliation'])
+with open('Mk2SerpAPI/authorIdFile.csv','w') as outputFile:
+  csvwriter = csv.writer(outputFile,delimiter = ',')
+  csvwriter.writerow(['first_Name','last_Name','University','AuthorID','Affiliation'])
+  for line in outputLine:
+    csvwriter.writerow([line])
   
