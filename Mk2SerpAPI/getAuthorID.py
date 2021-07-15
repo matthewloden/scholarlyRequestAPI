@@ -21,8 +21,9 @@ for names in searchInput:
   }
   print("Working On: ",names)
 
-  # search = GoogleSearch.new(params) 
-  # data = search.get_json()
+  # search = GoogleSearch(params)
+  # results = search.get_dict()
+  # profiles = results['profiles']
 
 
 ##implementation with json object not found recursivly
