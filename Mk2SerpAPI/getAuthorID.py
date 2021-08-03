@@ -1,7 +1,12 @@
+from pandas.core.frame import DataFrame
 import requests
 from serpapi import GoogleSearch
 import json
 import pandas as pd
+
+mySecret = open("Mk2SerpAPI/secret.txt","r")
+myAPIKey = mySecret.read()
+mySecret.close()
 
 df = pd.read_csv('Mk2SerpAPI/test_Names.csv')
 
@@ -12,36 +17,35 @@ for index, row in df.iterrows():
 print(searchInput)
 #have aquired author names and placed them in an array called searchInput
 
+author_id = []
+affiliations = []
+
 #time to send the api request
 for names in searchInput:
   params = {
     "engine": "google_scholar_profiles",
     "mauthors": names,
-    #"api_key": "secret_api_key"    #need to store this in a secret way
+    "api_key": myAPIKey  
   }
   print("Working On: ",names)
 
-  # search = GoogleSearch(params)
-  # results = search.get_dict()
-  # profiles = results['profiles']
+  search = GoogleSearch(params)
+  results = search.get_dict()
+  profiles = results['profiles']
 
+  # print(profiles)
+  if profiles[0]['author_id']:
+    author_id.append(profiles[0]['author_id'])
+  else:
+    author_id.append('ERROR')
+  if profiles[0]['affiliations']:
+    affiliations.append(profiles[0]['affiliations'])  
+  else:
+    affiliations.append('ERROR')
 
-##implementation with json object not found recursivly
+df['author_id'] = author_id
+df['affiliations'] = affiliations
 
-with open('Mk2SerpAPI/authorID.json','r') as jsonFile:
-  jsonObject = json.load(jsonFile)
-  jsonFile.close()
-
-author_id = jsonObject['profiles'][0]['author_id']
-affiliations = jsonObject['profiles'][0]['affiliations']
-
-kalenaID = "MMzxAS8AAAAJ"
-kalenaAffiliation = "Texas A&M Univ, National Bureau of Economic Research (NBER), Institute for the Study of …"
-robertID = "YQJOP48AAAAJ"
-robertAffilliation = "Texas A&M University"
-
-df['authorID'] = author_id,kalenaID,robertID
-df['affiliation'] = affiliations,kalenaAffiliation,robertAffilliation
-
+print(df)
 
 df.to_csv('Mk2SerpAPI/authorIDFile.csv')
