@@ -13,7 +13,10 @@ df = pd.read_csv('Mk2SerpAPI/test_Names.csv')
 # print(df)
 searchInput = []
 for index, row in df.iterrows():
-  searchInput.append(row['first_Name']+' '+row['last_Name']+', '+row['University'])
+  if row['university'] == "360222-UMCP":
+    searchInput.append(row['name']+', University of Maryland')  
+  else:
+    searchInput.append(row['name']+', '+row['university'])
 print(searchInput)
 #have aquired author names and placed them in an array called searchInput
 
@@ -31,21 +34,27 @@ for names in searchInput:
 
   search = GoogleSearch(params)
   results = search.get_dict()
-  profiles = results['profiles']
+  try:
+    profiles = results['profiles']
+    # print(profiles)
+    try:
+      author_id.append(profiles[0]['author_id'])
+    except KeyError:
+      author_id.append('ERROR Getting Author ID')
+    try:
+      affiliations.append(profiles[0]['affiliations'])  
+    except KeyError:
+      affiliations.append('ERROR Getting Affiliation')
+  except KeyError:
+    author_id.append(results['error'])
+    affiliations.append(results['error'])
+    
 
-  # print(profiles)
-  if profiles[0]['author_id']:
-    author_id.append(profiles[0]['author_id'])
-  else:
-    author_id.append('ERROR')
-  if profiles[0]['affiliations']:
-    affiliations.append(profiles[0]['affiliations'])  
-  else:
-    affiliations.append('ERROR')
+  
 
 df['author_id'] = author_id
 df['affiliations'] = affiliations
 
 print(df)
 
-df.to_csv('Mk2SerpAPI/authorIDFile.csv')
+df.to_csv('Mk2SerpAPI/testAuthorIdOutput.csv')
